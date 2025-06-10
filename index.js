@@ -44,7 +44,6 @@ async function run() {
     app.get("/featured-packages", async (req, res) => {
       const result = await packagesCollections.find().limit(6).toArray();
       console.log(result);
-
       res.send(result);
     });
 
