@@ -40,6 +40,14 @@ async function run() {
       res.send(result);
     });
 
+    // show featured Packages
+    app.get("/featured-packages", async (req, res) => {
+      const result = await packagesCollections.find().limit(6).toArray();
+      console.log(result);
+
+      res.send(result);
+    });
+
     // show all recipes to the ui
     app.get("/recipes", async (req, res) => {
       const result = await recipesCollections.find().toArray();
@@ -51,18 +59,6 @@ async function run() {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await recipesCollections.findOne(query);
-      res.send(result);
-    });
-
-    // show top recipes
-    app.get("/top-recipes", async (req, res) => {
-      const result = await recipesCollections
-        .find()
-        .sort({ likes: -1 })
-        .limit(6)
-        .toArray();
-      // console.log(result);
-
       res.send(result);
     });
 
