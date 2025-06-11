@@ -47,9 +47,9 @@ async function run() {
       res.send(result);
     });
 
-    // show all recipes to the ui
-    app.get("/recipes", async (req, res) => {
-      const result = await recipesCollections.find().toArray();
+    // show all packages to the ui
+    app.get("/packages", async (req, res) => {
+      const result = await packagesCollections.find().toArray();
       res.send(result);
     });
 
