@@ -76,10 +76,10 @@ async function run() {
     });
 
     // delete api
-    app.delete("/recipes/:id", async (req, res) => {
+    app.delete("/packages/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
-      const result = await recipesCollections.deleteOne(query);
+      const result = await tourPackagesCollections.deleteOne(query);
       res.send(result);
     });
 
