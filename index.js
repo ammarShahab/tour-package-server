@@ -28,49 +28,49 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
-    const packagesCollections = client
+    const tourPackagesCollections = client
       .db("tripNestdb")
       .collection("packagesCollections");
 
     // Save data to the database
     app.post("/packages", async (req, res) => {
       const newAddedPackage = req.body;
-      console.log(newAddedPackage);
-      const result = await packagesCollections.insertOne(newAddedPackage);
+      // console.log(newAddedPackage);
+      const result = await tourPackagesCollections.insertOne(newAddedPackage);
       res.send(result);
     });
 
     // show featured Packages
     app.get("/featured-packages", async (req, res) => {
-      const result = await packagesCollections.find().limit(6).toArray();
-      console.log(result);
+      const result = await tourPackagesCollections.find().limit(6).toArray();
+      // console.log(result);
       res.send(result);
     });
 
     // show all packages to the ui
     app.get("/packages", async (req, res) => {
-      const result = await packagesCollections.find().toArray();
+      const result = await tourPackagesCollections.find().toArray();
       res.send(result);
     });
 
-    // show each recipe details
-    app.get("/recipes/:id", async (req, res) => {
+    // show each package details
+    app.get("/packages/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
-      const result = await recipesCollections.findOne(query);
+      const result = await tourPackagesCollections.findOne(query);
       res.send(result);
     });
 
-    // show myrecipes to ui that i added
+    // show my added packages in ui
 
-    app.get("/recipes-email/:email", async (req, res) => {
+    app.get("/manage-myPackages/:email", async (req, res) => {
       // console.log(req.params);
 
       const email = req.params.email;
-      // console.log(email);
-      // const query = { email: email };
-      const result = await recipesCollections.find({ email: email }).toArray();
-      // console.log(result);
+      console.log(email);
+      const query = { guide_email: email };
+      const result = await tourPackagesCollections.find(query).toArray();
+      console.log(result);
 
       res.send(result);
     });
