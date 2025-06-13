@@ -53,11 +53,47 @@ async function run() {
       res.send(result);
     });
 
-    // show each package details
+    // show each package details and also for update package for primarily get the data from db
     app.get("/packages/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await tourPackagesCollections.findOne(query);
+      res.send(result);
+    });
+
+    // update my packages api
+    app.put("/packages/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const {
+        tour_name,
+        image,
+        duration,
+        departure,
+        destination,
+        price,
+        departure_date,
+        package_details,
+        guide_contact_no,
+      } = req.body;
+      console.log(req.body);
+      const updatedPackage = {
+        $set: {
+          tour_name: tour_name,
+          image: image,
+          duration: duration,
+          departure: departure,
+          destination: destination,
+          price: price,
+          departure_date: departure_date,
+          package_details: package_details,
+          guide_contact_no: guide_contact_no,
+        },
+      };
+      const result = await tourPackagesCollections.updateOne(
+        query,
+        updatedPackage
+      );
       res.send(result);
     });
 
