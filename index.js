@@ -32,7 +32,9 @@ async function run() {
       .db("tripNestdb")
       .collection("packagesCollections");
 
-    const bookingsCollections = client.db("tripNestdb").collection("bookings");
+    const myBookingsCollections = client
+      .db("tripNestdb")
+      .collection("bookingsCollections");
 
     // Save data to the database
     app.post("/packages", async (req, res) => {
@@ -121,13 +123,45 @@ async function run() {
       res.send(result);
     });
 
-    // My Bookings Collections
+    // save my Bookings Collections in db
     app.post("/bookings", async (req, res) => {
       const myBooking = req.body;
-      const result = await bookingsCollections.insertOne(myBooking);
+      const result = await myBookingsCollections.insertOne(myBooking);
       res.send(result);
     });
 
+    // show my Booking collection api from db
+
+    app.get("/my-bookings/:email", async (req, res) => {
+      const email = req.params.email;
+      const filter = { buyerEmail: email };
+      const result = await myBookingsCollections.find(filter).toArray();
+      res.send(result);
+      console.log(result);
+    });
+
+    //
+    app.patch("/bookings/:id", async (req, res) => {
+      const { id } = req.params;
+      const { status } = req.body;
+      /* const updatedDoc = {
+        $set: {
+          status: "completed",
+        },
+      }; */
+
+      const result = await myBookingsCollections.updateOne(
+        {
+          _id: new ObjectId(id),
+        },
+        {
+          $set: {
+            status: "completed",
+          },
+        }
+      );
+      res.send(result);
+    });
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });
     console.log(
