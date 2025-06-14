@@ -32,6 +32,8 @@ async function run() {
       .db("tripNestdb")
       .collection("packagesCollections");
 
+    const bookingsCollections = client.db("tripNestdb").collection("bookings");
+
     // Save data to the database
     app.post("/packages", async (req, res) => {
       const newAddedPackage = req.body;
@@ -116,6 +118,13 @@ async function run() {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await tourPackagesCollections.deleteOne(query);
+      res.send(result);
+    });
+
+    // My Bookings Collections
+    app.post("/bookings", async (req, res) => {
+      const myBooking = req.body;
+      const result = await bookingsCollections.insertOne(myBooking);
       res.send(result);
     });
 
