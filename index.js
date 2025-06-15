@@ -53,7 +53,15 @@ async function run() {
 
     // show all packages to the ui
     app.get("/packages", async (req, res) => {
-      const result = await tourPackagesCollections.find().toArray();
+      const { searchParams } = req.query;
+      let query = {};
+
+      if (searchParams) {
+        query = { tour_name: { $regex: searchParams, $options: "i" } };
+      }
+      // console.log(searchParams);
+
+      const result = await tourPackagesCollections.find(query).toArray();
       res.send(result);
     });
 
