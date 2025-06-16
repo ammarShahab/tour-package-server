@@ -132,9 +132,20 @@ async function run() {
     });
 
     // save my Bookings Collections in db
-    app.post("/bookings", async (req, res) => {
+    app.post("/bookings/:packageId", async (req, res) => {
       const myBooking = req.body;
       const result = await myBookingsCollections.insertOne(myBooking);
+
+      const id = req.params.packageId;
+      const query = { _id: new ObjectId(id) };
+
+      if (result.acknowledged) {
+        await tourPackagesCollections.updateOne(query, {
+          $inc: {
+            bookingCount: +1,
+          },
+        });
+      }
       res.send(result);
     });
 
