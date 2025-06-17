@@ -6,7 +6,7 @@ The **Trip Nest Backend** is the server-side application for the Trip Nest trave
 
 ## 🌐 Live Server URL
 
-🔗 [Backend API Base URL](https://your-tripnest-backend-url.com)  
+🔗 [Backend API Base URL](https://b11a11-server-side-ashahab007.vercel.app/)  
 _Replace with your actual deployed backend link (e.g., Render, Railway, etc.)_
 
 ---
