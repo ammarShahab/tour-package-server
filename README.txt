@@ -65,6 +65,9 @@ This ensures the frontend can deliver a smooth experience to travelers while the
 
 ---
 
+## API Endpoints
+
+
 | Method | Endpoint           | Description                   |
 | ------ | ------------------ | ----------------------------- |
 | GET    | `/packages`        | Get all travel packages       |
