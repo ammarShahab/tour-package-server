@@ -81,8 +81,8 @@ async function run() {
         duration,
         departure,
         destination,
-        price,
         departure_date,
+        price,
         package_details,
         guide_contact_no,
       } = req.body;
