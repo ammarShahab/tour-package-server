@@ -49,18 +49,51 @@ async function run() {
       res.send(result);
     });
 
-    // show all packages to the ui
+    // show all packages to the UI with search & sort
     app.get("/packages", async (req, res) => {
-      const { searchParams } = req.query;
-      let query = {};
+      const { searchParams, sort } = req.query;
 
-      if (searchParams) {
-        query = { tour_name: { $regex: searchParams, $options: "i" } };
+      try {
+        const pipeline = [];
+
+        // Optional search filter
+        /* if (searchParams) {
+          pipeline.push({
+            $match: { tour_name: { $regex: searchParams, $options: "i" } },
+          });
+        } */
+
+        // Convert price string to numeric field priceNum (safe with onError/onNull)
+        pipeline.push({
+          $addFields: {
+            priceNum: {
+              $convert: {
+                input: "$price",
+                to: "double",
+                /* onError: 0,
+                onNull: 0, */
+              },
+            },
+          },
+        });
+
+        // Optional numeric sort
+        /*  if (sort === "asc") pipeline.push({ $sort: { priceNum: 1 } });
+        else if (sort === "desc") pipeline.push({ $sort: { priceNum: -1 } }); */
+
+        // Optionally remove priceNum before sending (or keep it)
+        /* pipeline.push({
+          $project: { priceNum: 0 }, // remove helper field
+        }); */
+
+        const result = await tourPackagesCollections
+          .aggregate(pipeline)
+          .toArray();
+        res.send(result);
+      } catch (err) {
+        console.error("Error in /packages:", err);
+        res.status(500).send({ error: "Server error" });
       }
-      // console.log(searchParams);
-
-      const result = await tourPackagesCollections.find(query).toArray();
-      res.send(result);
     });
 
     // show each package details and also for update package for primarily get the data from db
