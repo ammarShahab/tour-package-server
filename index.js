@@ -51,44 +51,16 @@ async function run() {
 
     // show all packages to the UI with search & sort
     app.get("/packages", async (req, res) => {
-      const { searchParams, sort } = req.query;
-
+      const { searchParams } = req.query;
       try {
-        const pipeline = [];
+        const query = {};
 
-        // Optional search filter
-        /* if (searchParams) {
-          pipeline.push({
-            $match: { tour_name: { $regex: searchParams, $options: "i" } },
-          });
-        } */
+        if (searchParams) {
+          query.tour_name = { $regex: searchParams, $options: "i" };
+        }
 
-        // Convert price string to numeric field priceNum (safe with onError/onNull)
-        pipeline.push({
-          $addFields: {
-            priceNum: {
-              $convert: {
-                input: "$price",
-                to: "double",
-                /* onError: 0,
-                onNull: 0, */
-              },
-            },
-          },
-        });
+        const result = await tourPackagesCollections.find(query).toArray();
 
-        // Optional numeric sort
-        /*  if (sort === "asc") pipeline.push({ $sort: { priceNum: 1 } });
-        else if (sort === "desc") pipeline.push({ $sort: { priceNum: -1 } }); */
-
-        // Optionally remove priceNum before sending (or keep it)
-        /* pipeline.push({
-          $project: { priceNum: 0 }, // remove helper field
-        }); */
-
-        const result = await tourPackagesCollections
-          .aggregate(pipeline)
-          .toArray();
         res.send(result);
       } catch (err) {
         console.error("Error in /packages:", err);
